@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Hardware.Models.Product>
+
+@{
+    ViewData["Title"] = "Product";
+}
+
+<h1>Product</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary btn-rounded">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductCategoryId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Additional Actions</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Purchase</th>
+            <th>Sale</th>
+            <th>Inventory</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a asp-controller="Purchases" asp-action="Create" asp-route-id="@item.Id" class="btn btn-success">Add Purchase</a>
+                </td>
+                <td>
+                    <a asp-controller="Sales" asp-action="Create" asp-route-id="@item.Id" class="btn btn-info">Add Sale</a>
+                </td>
+                <td>
+                    <a asp-controller="Inventory" asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">View Inventory</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-controller="Admin" asp-action="Logout" class="btn btn-danger btn-rounded">Log Out</a>
+</div>

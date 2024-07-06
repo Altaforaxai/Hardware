@@ -1,0 +1,24 @@
+﻿@model Hardware.Models.Inventory
+
+<h2>Delete Inventory</h2>
+
+<div>
+    <h4>Product Name: @Model.Product.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Current Quantity:</dt>
+        <dd class="col-sm-10">@Model.CurrentQuantity</dd>
+
+        <dt class="col-sm-2">Units Sold:</dt>
+        <dd class="col-sm-10">@Model.UnitsSold</dd>
+
+        <dt class="col-sm-2">Units Purchased:</dt>
+        <dd class="col-sm-10">@Model.UnitsPurchased</dd>
+    </dl>
+</div>
+
+<form asp-action="DeleteConfirmed">
+    <input type="hidden" asp-for="ProductId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
