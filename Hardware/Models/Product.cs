@@ -6,9 +6,9 @@
         public string Name { get; set; }
         public int Price { get; set; }
         public int ProductCategoryId { get; set; }
-        public int Quantity { get; set; } // Current inventory quantity
-        public int UnitsSold { get; set; } // Total units sold
-        public int UnitsPurchased { get; set; } // Total units purchased
+        public int Quantity { get; set; } 
+        public int UnitsSold { get; set; } 
+        public int UnitsPurchased { get; set; } 
 
         // Navigation properties
         public ProductCategory ProductCategory { get; set; }

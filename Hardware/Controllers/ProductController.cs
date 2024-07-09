@@ -19,6 +19,22 @@ public class ProductController : Controller
         return View(await _context.Products.ToListAsync()); // Ensure you're accessing Products correctly
     }
 
+    public async Task<IActionResult> Search(string searchString)
+    {
+        var products = from p in _context.Products
+                       select p;
+
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            products = products.Where(s => s.Name.Contains(searchString));
+        }
+
+        return View("Index", await products.ToListAsync());
+    }
+
+
+    // GET: Product/Details/5
+
     // GET: Product/Details/5
     public async Task<IActionResult> Details(int? id)
     {
@@ -28,6 +44,7 @@ public class ProductController : Controller
         }
 
         var product = await _context.Products
+            .Include(p => p.ProductCategory)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (product == null)
         {
@@ -36,6 +53,9 @@ public class ProductController : Controller
 
         return View(product);
     }
+
+
+
 
     // GET: Product/Create
     public IActionResult Create()

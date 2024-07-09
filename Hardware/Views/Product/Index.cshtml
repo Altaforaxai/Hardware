@@ -4,9 +4,23 @@
     ViewData["Title"] = "Product";
 }
 
-<h1>Product</h1>
+<h1>Product </h1>
+
+<form asp-action="Search" class="form-inline">
+    <div class="form-group mb-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Search by product name" />
+    </div>
+    <button type="submit" class="btn btn-primary mb-2 ml-2">
+        Search <i class="fa fa-search"></i>
+    </button>
+    <a asp-action="Index" class="btn btn-secondary mb-2 ml-auto">
+        <i style="font-size:18px" class="fa fa-list"></i> List
+    </a>
+</form>
+
 
 <p>
+    <br />
     <a asp-action="Create" class="btn btn-primary btn-rounded">Create New</a>
 </p>
 <table class="table">
@@ -34,9 +48,16 @@
                 <td>@Html.DisplayFor(modelItem => item.UnitsPurchased)</td>
                 <td>@Html.DisplayFor(modelItem => item.UnitsSold)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">Edit</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">
+                        <i style="font-size:24px" class="fa">&#xf044;</i> Edit
+                    </a>
+                    <!-- Add this line to your HTML or layout file -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-abc123..." crossorigin="anonymous" />
+
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-rounded">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
                 </td>
             </tr>
         }
