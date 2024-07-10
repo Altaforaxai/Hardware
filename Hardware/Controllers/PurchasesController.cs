@@ -18,7 +18,7 @@ namespace Hardware.Controllers
         // GET: Purchases/Create
         public IActionResult Create()
         {
-        ViewBag.Products = _context.Products.ToList();
+            ViewBag.Products = _context.Products.ToList();
             return View();
         }
 
@@ -27,35 +27,36 @@ namespace Hardware.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,PurchaseDate,QuantityPurchased,UnitPrice")] Purchase purchase)
         {
-        if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-            _context.Add(purchase);
-                    await _context.SaveChangesAsync();
+                _context.Add(purchase);
+                await _context.SaveChangesAsync();
 
-            // Update Inventory
-            var inventory = await _context.Inventory.FirstOrDefaultAsync(i => i.ProductId == purchase.ProductId);
-            if (inventory != null)
-            {
-                inventory.UnitsPurchased += purchase.QuantityPurchased;
-                inventory.CurrentQuantity += purchase.QuantityPurchased;
-            }
-            else
-            {
-                inventory = new Inventory
+                // Update Inventory
+                var inventory = await _context.Inventory.FirstOrDefaultAsync(i => i.ProductId == purchase.ProductId);
+                if (inventory != null)
                 {
-                    ProductId = purchase.ProductId,
-                    UnitsPurchased = purchase.QuantityPurchased,
-                    CurrentQuantity = purchase.QuantityPurchased
-                };
-                _context.Inventory.Add(inventory);
-            }
-                    await _context.SaveChangesAsync();
+                    inventory.UnitsPurchased += purchase.QuantityPurchased;
+                    inventory.CurrentQuantity += purchase.QuantityPurchased;
+                }
+                else
+                {
+                    inventory = new Inventory
+                    {
+                        ProductId = purchase.ProductId,
+                        UnitsPurchased = purchase.QuantityPurchased,
+                        CurrentQuantity = purchase.QuantityPurchased
+                    };
+                    _context.Inventory.Add(inventory);
+                }
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Inventory");
+                return RedirectToAction("Index", "Inventory");
             }
-        ViewBag.Products = _context.Products.ToList();
+            ViewBag.Products = _context.Products.ToList();
             return View(purchase);
         }
 
+    }
 }
 

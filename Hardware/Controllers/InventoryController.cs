@@ -17,7 +17,7 @@ public class InventoryController : Controller
     // GET: Inventory
     public async Task<IActionResult> Index()
     {
-        var inventories = await _context.Inventories.Include(i => i.Product).ToListAsync();
+        var inventories = await _context.Inventory.Include(i => i.Product).ToListAsync();
         return View(inventories);
     }
 
@@ -29,7 +29,7 @@ public class InventoryController : Controller
             return NotFound();
         }
 
-        var inventory = await _context.Inventories
+        var inventory = await _context.Inventory
             .Include(i => i.Product)
             .FirstOrDefaultAsync(m => m.ProductId == id);
         if (inventory == null)
@@ -70,7 +70,7 @@ public class InventoryController : Controller
             return NotFound();
         }
 
-        var inventory = await _context.Inventories.FindAsync(id);
+        var inventory = await _context.Inventory.FindAsync(id);
         if (inventory == null)
         {
             return NotFound();
@@ -121,7 +121,7 @@ public class InventoryController : Controller
             return NotFound();
         }
 
-        var inventory = await _context.Inventories
+        var inventory = await _context.Inventory
             .Include(i => i.Product)
             .FirstOrDefaultAsync(m => m.ProductId == id);
         if (inventory == null)
@@ -137,14 +137,14 @@ public class InventoryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var inventory = await _context.Inventories.FindAsync(id);
-        _context.Inventories.Remove(inventory);
+        var inventory = await _context.Inventory.FindAsync(id);
+        _context.Inventory.Remove(inventory);
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
     private bool InventoryExists(int id)
     {
-        return _context.Inventories.Any(e => e.ProductId == id);
+        return _context.Inventory.Any(e => e.ProductId == id);
     }
 }
