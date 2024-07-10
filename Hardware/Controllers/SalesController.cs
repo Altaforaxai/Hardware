@@ -1,31 +1,36 @@
 ﻿using Hardware.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class SalesController : Controller
+namespace Hardware.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public SalesController(ApplicationDbContext context)
+    public class SalesController : Controller
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    // GET: Sales/Create
-    public IActionResult Create()
-    {
-        ViewBag.Products = _context.Products.ToList();
-        return View();
-    }
-
-    // POST: Sales/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("ProductId,SaleDate,QuantitySold,UnitPrice")] Sale sale)
-    {
-        if (ModelState.IsValid)
+        public SalesController(ApplicationDbContext context)
         {
+            _context = context;
+        }
+
+        // GET: Sales/Create
+        public IActionResult Create()
+        {
+        ViewBag.Products = _context.Products.ToList();
+            return View();
+        }
+
+        // POST: Sales/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ProductId,SaleDate,QuantitySold,UnitPrice")] Sale sale)
+        {
+            if (ModelState.IsValid)
+            {
             _context.Add(sale);
-            await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
             // Update Inventory
             var inventory = _context.Inventory.SingleOrDefault(i => i.ProductId == sale.ProductId);
@@ -44,11 +49,12 @@ public class SalesController : Controller
                 };
                 _context.Inventory.Add(inventory);
             }
-            await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Inventory");
-        }
+            }
         ViewBag.Products = _context.Products.ToList();
-        return View(sale);
+            return View(sale);
+        }
     }
 }

@@ -53,5 +53,7 @@ public class ApplicationDbContext : DbContext
         );
     }
 
-}
+        modelBuilder.Entity<Inventory>().HasNoKey();
+    }
 
+}

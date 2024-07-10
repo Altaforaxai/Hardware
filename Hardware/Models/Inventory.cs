@@ -17,3 +17,4 @@ namespace Hardware.Models
         public Purchase Purchase { get; set; }
     }
 }
+

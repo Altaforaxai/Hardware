@@ -1,32 +1,36 @@
 ﻿using Hardware.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class PurchasesController : Controller
+namespace Hardware.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public PurchasesController(ApplicationDbContext context)
+    public class PurchasesController : Controller
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    // GET: Purchases/Create
-    public IActionResult Create()
-    {
-        ViewBag.Products = _context.Products.ToList();
-        return View();
-    }
-
-    // POST: Purchases/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("ProductId,PurchaseDate,QuantityPurchased,UnitPrice")] Purchase purchase)
-    {
-        if (!ModelState.IsValid)
+        public PurchasesController(ApplicationDbContext context)
         {
+            _context = context;
+        }
+
+        // GET: Purchases/Create
+        public IActionResult Create()
+        {
+        ViewBag.Products = _context.Products.ToList();
+            return View();
+        }
+
+        // POST: Purchases/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ProductId,PurchaseDate,QuantityPurchased,UnitPrice")] Purchase purchase)
+        {
+        if (!ModelState.IsValid)
+            {
             _context.Add(purchase);
-            await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
             // Update Inventory
             var inventory = await _context.Inventory.FirstOrDefaultAsync(i => i.ProductId == purchase.ProductId);
@@ -45,13 +49,13 @@ public class PurchasesController : Controller
                 };
                 _context.Inventory.Add(inventory);
             }
-            await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Inventory");
-        }
+            }
         ViewBag.Products = _context.Products.ToList();
-        return View(purchase);
-    }
+            return View(purchase);
+        }
 
 }
 
