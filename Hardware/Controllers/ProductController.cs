@@ -44,8 +44,8 @@ public class ProductController : Controller
         }
 
         var product = await _context.Products
-            .Include(p => p.ProductCategory)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .Where(p => p.Id==id)
+            .FirstOrDefaultAsync();
         if (product == null)
         {
             return NotFound();
@@ -68,7 +68,7 @@ public class ProductController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Name,Price,ProductCategoryId,Quantity,UnitsPurchased,UnitsSold")] Product product)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             _context.Add(product);
             await _context.SaveChangesAsync();
@@ -107,26 +107,41 @@ public class ProductController : Controller
 
         if (!ModelState.IsValid)
         {
-            try
-            {
-                _context.Update(product);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(product.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            return View(product);
         }
-        return View(product);
+
+        try
+        {
+            var existingProduct = await _context.Products.FindAsync(id);
+
+            if (existingProduct == null)
+            {
+                return NotFound();
+            }
+
+            existingProduct.Name = product.Name;
+            existingProduct.Price = product.Price;
+            existingProduct.ProductCategoryId = product.ProductCategoryId;
+            existingProduct.Quantity = product.Quantity;
+
+            _context.Update(existingProduct);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ProductExists(product.Id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return RedirectToAction(nameof(Index));
     }
+
 
     // GET: Product/Delete/5
     public async Task<IActionResult> Delete(int? id)

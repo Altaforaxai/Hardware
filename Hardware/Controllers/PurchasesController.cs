@@ -1,6 +1,8 @@
 ﻿using Hardware.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,27 +31,23 @@ namespace Hardware.Controllers
         {
             if (!ModelState.IsValid)
             {
-                _context.Add(purchase);
-                await _context.SaveChangesAsync();
+                using (var connection = (SqlConnection)_context.Database.GetDbConnection())
+                {
+                    connection.Open();
 
-                // Update Inventory
-                var inventory = await _context.Inventory.FirstOrDefaultAsync(i => i.ProductId == purchase.ProductId);
-                if (inventory != null)
-                {
-                    inventory.UnitsPurchased += purchase.QuantityPurchased;
-                    inventory.CurrentQuantity += purchase.QuantityPurchased;
-                }
-                else
-                {
-                    inventory = new Inventory
+                    using (var command = new SqlCommand("AddPurchase", connection))
                     {
-                        ProductId = purchase.ProductId,
-                        UnitsPurchased = purchase.QuantityPurchased,
-                        CurrentQuantity = purchase.QuantityPurchased
-                    };
-                    _context.Inventory.Add(inventory);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@ProductId", purchase.ProductId);
+                        command.Parameters.AddWithValue("@PurchaseDate", purchase.PurchaseDate);
+                        command.Parameters.AddWithValue("@QuantityPurchased", purchase.QuantityPurchased);
+                        command.Parameters.AddWithValue("@UnitPrice", purchase.UnitPrice);
+
+                        await command.ExecuteNonQueryAsync();
+                    }
+
+                    connection.Close();
                 }
-                await _context.SaveChangesAsync();
 
                 return RedirectToAction("Index", "Inventory");
             }

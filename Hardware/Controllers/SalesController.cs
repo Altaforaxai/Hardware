@@ -1,6 +1,8 @@
 ﻿using Hardware.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,31 +31,33 @@ namespace Hardware.Controllers
         {
             if (ModelState.IsValid)
             {
-            _context.Add(sale);
-                    await _context.SaveChangesAsync();
-
-            // Update Inventory
-            var inventory = _context.Inventory.SingleOrDefault(i => i.ProductId == sale.ProductId);
-            if (inventory != null)
-            {
-                inventory.UnitsSold += sale.QuantitySold;
-                inventory.CurrentQuantity -= sale.QuantitySold;
-            }
-            else
-            {
-                inventory = new Inventory
+                try
                 {
-                    ProductId = sale.ProductId,
-                    UnitsSold = sale.QuantitySold,
-                    CurrentQuantity = -sale.QuantitySold // Initial sale without purchase
-                };
-                _context.Inventory.Add(inventory);
-            }
-                    await _context.SaveChangesAsync();
+                    using (var connection = new SqlConnection(_context.Database.GetConnectionString()))
+                    {
+                        await connection.OpenAsync();
 
-            return RedirectToAction("Index", "Inventory");
+                        using (var command = new SqlCommand("AddSale", connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@ProductId", sale.ProductId);
+                            command.Parameters.AddWithValue("@SaleDate", sale.SaleDate);
+                            command.Parameters.AddWithValue("@QuantitySold", sale.QuantitySold);
+                            command.Parameters.AddWithValue("@UnitPrice", sale.UnitPrice);
+
+                            await command.ExecuteNonQueryAsync();
+                        }
+                    }
+
+                    return RedirectToAction("Index", "Inventory");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                }
             }
-        ViewBag.Products = _context.Products.ToList();
+
+            ViewBag.Products = _context.Products.ToList();
             return View(sale);
         }
     }
