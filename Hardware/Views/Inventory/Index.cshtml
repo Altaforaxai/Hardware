@@ -10,6 +10,7 @@
             <th>Date</th>
             <th>Quantity</th>
             <th>Unit Price</th>
+            <th>Total Price</th>
             <!-- Add more columns as needed -->
         </tr>
     </thead>
@@ -22,6 +23,7 @@
                 <td>@entry.Date.ToString("yyyy-MM-dd")</td>
                 <td>@entry.Quantity</td>
                 <td>@entry.UnitPrice.ToString()</td>
+                <td>@(entry.Quantity * entry.UnitPrice)</td>
                 <!-- Add more columns as needed -->
             </tr>
         }

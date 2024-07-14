@@ -1,5 +1,6 @@
 ﻿using Hardware.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -18,12 +19,23 @@ namespace Hardware.Controllers
         }
 
         // GET: Purchases/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewBag.Products = _context.Products.ToList();
+            PopulateProductsDropDownList(id);
+
             return View();
         }
+        private void PopulateProductsDropDownList(object selectedProduct = null)
+        {
+            var products = _context.Products
+                .Select(p => new SelectListItem
+                {
+                    Value = p.Id.ToString(),
+                    Text = p.Name
+                }).ToList();
 
+            ViewBag.Products = new SelectList(products, "Value", "Text", selectedProduct);
+        }
         // POST: Purchases/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -1,8 +1,7 @@
 ﻿@model Hardware.Models.Purchase
-
 @{
     ViewData["Title"] = "Create Purchase";
-    var products = ViewBag.Products as List<Hardware.Models.Product>;
+  
 }
 
 <h1>Create Purchase</h1>
@@ -13,20 +12,11 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div class="form-group">
-                <label for="ProductId">Product</label>
-                <select class="form-control" id="ProductId" name="ProductId">
-                    @if (products != null && products.Any())
-                    {
-                        @foreach (var product in products)
-                        {
-                            <option value="@product.Id">@product.Name</option>
-                        }
-                    }
-                    else
-                    {
-                        <option>No products available</option>
-                    }
+                <label asp-for="ProductId" class="control-label"></label>
+                <select asp-for="ProductId" class="form-control" asp-items="ViewBag.Products">
+                    <option value="">-- Select Product --</option>
                 </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
 
             <div class="form-group">

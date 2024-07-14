@@ -2,20 +2,11 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label for="ProductId">Product</label>
-        <select class="form-control" id="ProductId" name="ProductId">
-            @if (ViewBag.Products != null && ViewBag.Products.Count > 0)
-            {
-                @foreach (var product in ViewBag.Products)
-                {
-                    <option value="@product.Id">@product.Name</option>
-                }
-            }
-            else
-            {
-                <option>No products available</option>
-            }
+        <label asp-for="ProductId" class="control-label"></label>
+        <select asp-for="ProductId" class="form-control" asp-items="ViewBag.Products">
+            <option value="">-- Select Product --</option>
         </select>
+        <span asp-validation-for="ProductId" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label for="SaleDate">Sale Date</label>

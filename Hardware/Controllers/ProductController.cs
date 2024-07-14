@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
 using Hardware.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Hardware.Models.custommodel;
 
 public class ProductController : Controller
 {
@@ -14,9 +16,30 @@ public class ProductController : Controller
     }
 
     // GET: Product/Index
-    public async Task<IActionResult> Index()
-    {
-        return View(await _context.Products.ToListAsync()); // Ensure you're accessing Products correctly
+    public  IActionResult Index()
+    {       
+        
+        
+
+   
+
+        var ur = (from u in  _context.Products
+                  join r in  _context.ProductCategories on u.ProductCategoryId equals r.Id
+
+                  select new Product
+                  {
+
+                      Id = u.Id,
+                      Name = u.Name,
+                      Price = u.Price,
+                      ProductName = r.ProductName,
+                      Quantity = u.Quantity,
+                      UnitsPurchased = u.UnitsPurchased,
+                      UnitsSold = u.UnitsSold,
+                  }).ToList();
+
+
+        return View(ur); // Ensure you're accessing Products correctly
     }
 
     public async Task<IActionResult> Search(string searchString)
@@ -60,6 +83,18 @@ public class ProductController : Controller
     // GET: Product/Create
     public IActionResult Create()
     {
+        // Create a list of predefined categories
+        var categories = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Iron" },
+        new SelectListItem { Value = "2", Text = "Steel" },
+        new SelectListItem { Value = "3", Text = "Plastic" },
+        new SelectListItem { Value = "4", Text = "Glass" }
+    };
+
+        // Pass the list to the view
+        ViewBag.ProductCategories = categories;
+
         return View();
     }
 
@@ -92,57 +127,44 @@ public class ProductController : Controller
         {
             return NotFound();
         }
+
+        PopulateCategoriesDropDownList(product.ProductName);
         return View(product);
     }
 
     // POST: Product/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,ProductCategoryId,Quantity")] Product product)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ProductCategoryId,Price,ProductName,Quantity,UnitsPurchased,UnitsSold")] Product product)
     {
         if (id != product.Id)
         {
             return NotFound();
         }
 
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-            return View(product);
-        }
-
-        try
-        {
-            var existingProduct = await _context.Products.FindAsync(id);
-
-            if (existingProduct == null)
+            try
             {
-                return NotFound();
+                _context.Update(product);
+                await _context.SaveChangesAsync();
             }
-
-            existingProduct.Name = product.Name;
-            existingProduct.Price = product.Price;
-            existingProduct.ProductCategoryId = product.ProductCategoryId;
-            existingProduct.Quantity = product.Quantity;
-
-            _context.Update(existingProduct);
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ProductExists(product.Id))
+            catch (DbUpdateConcurrencyException)
             {
-                return NotFound();
+                if (!ProductExists(product.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
-            else
-            {
-                throw;
-            }
+            return RedirectToAction(nameof(Index));
         }
-
-        return RedirectToAction(nameof(Index));
+        PopulateCategoriesDropDownList(product.ProductName);
+        return View(product);
     }
-
-
     // GET: Product/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
@@ -175,5 +197,17 @@ public class ProductController : Controller
     private bool ProductExists(int id)
     {
         return _context.Products.Any(e => e.Id == id);
+    }
+    private void PopulateCategoriesDropDownList(object selectedCategory = null)
+    {
+        var categories = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "1", Text = "Iron" },
+            new SelectListItem { Value = "2", Text = "Steel" },
+            new SelectListItem { Value = "3", Text = "Plastic" },
+            new SelectListItem { Value = "4", Text = "Glass" }
+        };
+
+        ViewBag.ProductCategories = new SelectList(categories, "Value", "Text", selectedCategory);
     }
 }

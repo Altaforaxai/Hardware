@@ -12,5 +12,6 @@
         // Navigation property
         public Product Product { get; set; }
         public Inventory Inventory { get; set; }
+
     }
 }
