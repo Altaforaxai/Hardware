@@ -1,27 +1,46 @@
 ﻿@model Hardware.Models.Sale
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="ProductId" class="control-label"></label>
-        <select asp-for="ProductId" class="form-control" asp-items="ViewBag.Products">
-            <option value="">-- Select Product --</option>
-        </select>
-        <span asp-validation-for="ProductId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="SaleDate">Sale Date</label>
-        <input type="date" class="form-control" id="SaleDate" name="SaleDate" />
-    </div>
-    <div class="form-group">
-        <label for="QuantitySold">Quantity Sold</label>
-        <input type="number" class="form-control" id="QuantitySold" name="QuantitySold" />
-    </div>
-    <div class="form-group">
-        <label for="UnitPrice">Unit Price</label>
-        <input type="number" step="0.01" class="form-control" id="UnitPrice" name="UnitPrice" />
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <a asp-controller="Inventory" asp-action="Index" class="btn btn-primary ml-2">Go to Inventory</a>
-    <a asp-controller="Product" asp-action="Index" class="btn btn-primary ml-2">Back to Main</a>
+@{
+    ViewData["Title"] = "Create Sale";
+}
 
-</form>
+<h1>Create Sale</h1>
+
+<h4>Sale</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <select asp-for="ProductId" class="form-control" asp-items="ViewBag.Products">
+                    <option value="">-- Select Product --</option>
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SaleDate" class="control-label"></label>
+                <input asp-for="SaleDate" class="form-control" />
+                <span asp-validation-for="SaleDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuantitySold" class="control-label"></label>
+                <input asp-for="QuantitySold" class="form-control" />
+                <span asp-validation-for="QuantitySold" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitPrice" class="control-label"></label>
+                <input asp-for="UnitPrice" class="form-control" />
+                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a asp-controller="Inventory" asp-action="Index" class="btn btn-primary ml-2">Go to Inventory</a>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-primary ml-2">Back to Main</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

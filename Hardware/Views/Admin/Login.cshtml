@@ -1,22 +1,111 @@
 ﻿@{
+    Layout = null;
     ViewData["Title"] = "Admin Login";
 }
 
-<h2>@ViewData["Title"]</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hardware</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Hardware.styles.css" asp-append-version="true" />
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" name="username" />
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" />
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            margin: auto;
+        }
 
-@if (!string.IsNullOrEmpty(ViewData["ErrorMessage"]?.ToString()))
-{
-    <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
-}
+        input::placeholder {
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        h2 {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #4a4a4a;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+            .password-container input {
+                padding-right: 30px; /* Space for the eye icon */
+            }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <h2>@ViewData["Title"]</h2>
+            <form asp-action="Login" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" />
+                </div>
+                <div class="form-group password-container">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" />
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <i class="fa fa-eye" id="togglePasswordIcon"></i>
+                    </span>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"]?.ToString()))
+            {
+                <div class="alert alert-danger mt-3">@ViewData["ErrorMessage"]</div>
+            }
+        </div>
+    </div>
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var togglePasswordIcon = document.getElementById("togglePasswordIcon");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                togglePasswordIcon.classList.remove("fa-eye");
+                togglePasswordIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                togglePasswordIcon.classList.remove("fa-eye-slash");
+                togglePasswordIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Add this line to load Font Awesome -->
+</body>
+</html>
