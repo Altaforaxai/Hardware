@@ -1,108 +1,108 @@
 ﻿    @model IEnumerable<Hardware.Models.Product>
 
-    @{
-        ViewData["Title"] = "Product";
-    }
+@{
+    ViewData["Title"] = "Product";
+}
 
 
 
-    <h1>Product </h1>
+<h1>Product </h1>
 
-    <form asp-action="Search" class="form-inline">
-        <div class="form-group mb-2 position-relative">
-            <input type="text" name="searchString" class="form-control pr-5" placeholder="Search by product name" />
-            <button type="submit" class="btn btn-primary position-absolute" style="right: 0px; top: 50%; transform: translateY(-50%);">
-                <i class="fa fa-search"></i>
-            </button>
-        </div>
-        <a asp-action="Index" class="btn btn-secondary mb-2 ml-auto">
-            <i style="font-size:18px" class="fa fa-list"></i> List
-        </a>
-    </form>
+<form asp-action="Search" class="form-inline">
+    <div class="form-group mb-2 position-relative">
+        <input type="text" name="searchString" class="form-control pr-5" placeholder="Search by product name" />
+        <button type="submit" class="btn btn-primary position-absolute" style="right: 0px; top: 50%; transform: translateY(-50%);">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary mb-2 ml-auto">
+        <i style="font-size:18px" class="fa fa-list"></i> List
+    </a>
+</form>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k8HwT/V43F8XxAkXDTLJ9t1JkUnf1eD4yHOStDh22M5qTV46GQ6AIQDbLg8HzLBB" crossorigin="anonymous">
 
 <a asp-action="Create" class="btn btn-primary btn-rounded">
     <i class="fa-solid fa-circle-plus"></i> Create New
 </a>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Id)</th>
-                <th>@Html.DisplayNameFor(model => model.Name)</th>
-                <th>@Html.DisplayNameFor(model => model.Price)</th>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Id)</th>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Price)</th>
             <th>Category</th> <!-- Changed from ProductName to Category -->
             <th>@Html.DisplayNameFor(model => model.Quantity)</th>
-                <th>@Html.DisplayNameFor(model => model.UnitsPurchased)</th>
-                <th>@Html.DisplayNameFor(model => model.UnitsSold)</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Price)</td>
+            <th>@Html.DisplayNameFor(model => model.UnitsPurchased)</th>
+            <th>@Html.DisplayNameFor(model => model.UnitsSold)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
                 <td>@item.ProductName</td> <!-- Changed to display category name -->
                 <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UnitsPurchased)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UnitsSold)</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">
-                            <i style="font-size:24px" class="fa">&#xf044;</i> 
+                <td>@Html.DisplayFor(modelItem => item.UnitsPurchased)</td>
+                <td>@Html.DisplayFor(modelItem => item.UnitsSold)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">
+                        <i style="font-size:24px" class="fa">&#xf044;</i>
+                    </a>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-abc123..." crossorigin="anonymous" />
+
+                    <head>
+                        <title>Example</title>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM1z1LezzfnNx6/7BjPH4F0vXr7fr7jPpLt3aXK" crossorigin="anonymous">
+                    </head>
+                    <body>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">
+                            <i class="fa fa-info"></i>
                         </a>
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-abc123..." crossorigin="anonymous" />
-
-                        <head>
-                            <title>Example</title>
-                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM1z1LezzfnNx6/7BjPH4F0vXr7fr7jPpLt3aXK" crossorigin="anonymous">
-                        </head>
-                        <body>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-rounded">
-                                <i class="fa fa-info"></i>
-                            </a>
-                        </body>    
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-rounded">
-                            <i class="fas fa-trash-alt"></i> 
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <h2>Additional Actions</h2>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Purchase</th>
-                <th>Sale</th>
-                <th>Inventory</th>
+                    </body>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-rounded">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Name</td>
+        }
+    </tbody>
+</table>
+
+<h2>Additional Actions</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Purchase</th>
+            <th>Sale</th>
+            <th>Inventory</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
                 <td>
                     <a asp-controller="Purchases" asp-action="Create" asp-route-id="@item.Id" class="btn btn-success">Add Purchase</a>
                 </td>
-                    <td>
-                        <a asp-controller="Sales" asp-action="Create" asp-route-id="@item.Id" class="btn btn-info">Add Sale</a>
-                    </td>
-                    <td>
-                        <a asp-controller="Inventory" asp-action="Index" class="btn btn-warning">View Inventory</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                <td>
+                    <a asp-controller="Sales" asp-action="Create" asp-route-id="@item.Id" class="btn btn-info">Add Sale</a>
+                </td>
+                <td>
+                    <a asp-controller="Inventory" asp-action="Index" class="btn btn-warning">View Inventory</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-    <div>
-        <a asp-controller="Admin" asp-action="Login" class="btn btn-danger btn-rounded">Log Out</a>
-    </div>
+<div>
+    <a asp-controller="Admin" asp-action="Login" class="btn btn-danger btn-rounded">Log Out</a>
+</div>

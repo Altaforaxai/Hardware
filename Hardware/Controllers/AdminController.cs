@@ -29,9 +29,9 @@ namespace Hardware.Controllers
             if (admin != null)
             {
                 var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, username)
-                };
+        {
+            new Claim(ClaimTypes.Name, username)
+        };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
@@ -43,9 +43,11 @@ namespace Hardware.Controllers
 
                 return RedirectToAction("Index", "Product");
             }
-            ModelState.AddModelError("", "Invalid username or password");
+
+            ViewData["ErrorMessage"] = "Invalid username or password";
             return View();
         }
+
 
         [Authorize]
         [HttpPost]
